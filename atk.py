@@ -32,6 +32,7 @@ class Spell(pg.sprite.Sprite):
     def update(self, posY, screenH):
         if self.posY>= self.screenH:
             self.posY= 0
+            self.posX = randint(20, 980)
         self.posY += self.vel_Y
         self.rect.topleft = self.posX, self.posY
 
@@ -41,3 +42,5 @@ class Spell(pg.sprite.Sprite):
 
     def checkcolision(self):
         self.posY = 0
+        self.posX = randint(20, 980)
+        return True
