@@ -6,7 +6,7 @@ import pygame.sprite
 
 
 class Spell(pg.sprite.Sprite):
-    def __init__(self, width, posX, posY, screenH, screenW, screen):
+    def __init__(self, width, posX, posY, screenH, screenW, screen, actually):
         pg.sprite.Sprite.__init__(self)
         self.sprites = []
         self.sprites.append(pygame.image.load('sprites/escudoradiante.png'))
@@ -15,7 +15,7 @@ class Spell(pg.sprite.Sprite):
         self.sprites.append(pygame.image.load('sprites/laminasolar.png'))
         self.sprites.append(pygame.image.load('sprites/soardiabolico.png'))
         self.sprites.append(pygame.image.load('sprites/runasexplosivas.png'))
-        self.actually = 0
+        self.actually = actually
         self.image = self.sprites[self.actually]
         self.screenW = screenW
         self.width = width
@@ -25,31 +25,14 @@ class Spell(pg.sprite.Sprite):
         self.screen = screen
         self.vel_Y = 0.5
         self.rect = self.image.get_rect()
-        self.rect.topleft = 100, 100
+        self.rect.topleft = 5, 5
+
     def update(self, posY, screenH):
         if self.posY>= self.screenH:
             self.posY= 0
         self.posY += self.vel_Y
+        self.rect.topleft = self.posX, self.posY
 
-    def draw_shield(self):
-        self.actually= 0
-        self.screen.blit(self.image, (self.posX, self.posY))
-    def draw_axe(self):
-        self.actually = 1
-        self.screen.blit(self.image, (self.posX, self.posY))
-
-    def draw_runes(self):
-        self.actually = 2
-        self.screen.blit(self.image, (self.posX, self.posY))
-
-    def draw_sound(self):
-        self.actually = 3
-        self.screen.blit(self.image, (self.posX, self.posY))
-
-    def draw_spirit(self):
-        self.actually = 4
-        self.screen.blit(self.image, (self.posX, self.posY))
-
-    def draw_solar(self):
-        self.actually = 5
+    def draw(self):
+        self.image = self.sprites[self.actually]
         self.screen.blit(self.image, (self.posX, self.posY))

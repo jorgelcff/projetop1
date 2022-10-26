@@ -14,8 +14,8 @@ class Hero(pg.sprite.Sprite):
       self.y = 511
       self.screen = screen
       self.direction = -1
-      #self.life = 3
       self.rect = self.image.get_rect()
+      self.rect.topleft= 5, 5
       self.time = 10
 
   #Cria o desenho do Hero
