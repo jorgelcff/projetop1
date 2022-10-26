@@ -7,7 +7,7 @@ class Hero(pg.sprite.Sprite):
       self.width = width
       self.height = height
       self.image = pg.transform.scale(pg.image.load("Coleta.png"), (self.width, self.height))
-      self.vel_X = 1.8
+      self.vel_X = 1
       self.windowWidth = windowWidth
       self.windowHeight = windowHeight
       self.x = windowWidth/2 - width/2
