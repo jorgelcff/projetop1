@@ -6,8 +6,9 @@ import pygame.sprite
 
 
 class Spell(pg.sprite.Sprite):
-    def __init__(self, width, posX, posY, screenH, screenW, screen, actually):
+    def __init__(self, width, posX, posY, screenH, screenW, screen, actually, name):
         pg.sprite.Sprite.__init__(self)
+        self.name = name
         self.sprites = []
         self.sprites.append(pygame.image.load('sprites/escudoradiante.png'))
         self.sprites.append(pygame.image.load('sprites/martelodeguerra.png'))
@@ -26,6 +27,7 @@ class Spell(pg.sprite.Sprite):
         self.vel_Y = 0.5
         self.rect = self.image.get_rect()
         self.rect.topleft = 5, 5
+        self.colisions= [ ]
 
     def update(self, posY, screenH):
         if self.posY>= self.screenH:
@@ -36,3 +38,6 @@ class Spell(pg.sprite.Sprite):
     def draw(self):
         self.image = self.sprites[self.actually]
         self.screen.blit(self.image, (self.posX, self.posY))
+
+    def checkcolision(self):
+        self.posY = 0
