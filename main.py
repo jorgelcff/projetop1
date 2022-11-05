@@ -49,11 +49,12 @@ impronunciable = Lovecraft(250, 290, wight, height, screen, 400)
 #Probabilidades para os itens, textos da tela e outros
 probab = randint(0, 110)
 probab_dragon = randint(1, 4)
-text = str  # Uso comparativo
 all_sprites = pg.sprite.Group()
 time = pg.time.get_ticks()
 font = pg.font.SysFont('Tempus San ITC', 15, True, False)
 font_screen = pg.font.SysFont('Tempus San ITC', 150, True, False)
+font_score = pg.font.SysFont('Tempus San ITC', 80, True, False)
+font_analyse = pg.font.SysFont('Tempus San ITC', 20, True, False)
 
 
 #Funções principais responsáveis pela queda, pela desenho, pela comparação, colisão e etc.
@@ -96,7 +97,8 @@ def dragon_kit(item, name, number, impronunciable = impronunciable, height=heigh
     else:
         pass
 
-asmodeus, poisoned, count_asmodeus, rage = 0, 0, 0, 0
+asmodeus, poisoned, count_asmodeus, rage, score = 0, 0, 0, 0, 0
+s_shield, s_axe, s_sound, s_runes, s_spirit, s_blade = 0, 0, 0, 0, 0, 0
 protection, reflection = False, False
 
 while True:
@@ -135,6 +137,8 @@ while True:
     if life_dragon>0 and life_amoz>0:
         if 0 <= probab <= 20:
             if collision:
+                score += 2
+                s_shield += 1
                 poisoned = 0
                 protection = True
                 probab = randint(0, 110)
@@ -148,6 +152,8 @@ while True:
 
         elif 55 >= probab > 20:
             if collision:
+                score+= 4
+                s_axe += 1
                 life_amoz -= poisoned
                 life_dragon -= randint(10, 15)+asmodeus
                 probab = randint(0, 110)
@@ -165,6 +171,8 @@ while True:
 
         elif 75 >= probab > 55:
             if collision:
+                score+= 6
+                s_runes += 1
                 dex_dragon = randint(1, 2)
                 life_amoz -= poisoned
                 probab = randint(0, 110)
@@ -188,6 +196,8 @@ while True:
 
         elif 90 >= probab > 75:
             if collision:
+                score+= 8
+                s_sound += 1
                 life_amoz -= 10+poisoned
                 probab = randint(0, 110)
                 hit.remove(sound_devilish)
@@ -205,6 +215,8 @@ while True:
 
         elif 105 >= probab > 90:
             if collision:
+                score+=10
+                s_spirit += 1
                 reflection = True
                 poisoned=0
                 probab = randint(0, 110)
@@ -217,6 +229,8 @@ while True:
 
         elif probab>105:
             if collision:
+                score += 12
+                s_blade += 1
                 life_dragon-= randint(40, 50)
                 life_amoz -= poisoned
                 probab = randint(0, 110)
@@ -305,6 +319,8 @@ while True:
 
     hp_dragon = f'Vida do ?: {life_dragon}'
     hp_amoz = f'Vida de Amoz: {life_amoz}'
+    txt_sc = f'SCORE: {str(score)}'
+    tabel = f'Shield Radiant: x{s_shield}, War Axe: x{s_axe}, Explosive Runes: x{s_runes}, Sound Devilish: x{s_sound}, Spirit Guardian: x{s_spirit} and Solar Blade: x{s_blade}'
 
     txt_format_drg = font.render(hp_dragon, True, (245, 255, 255))
     txt_format_amz = font.render(hp_amoz, True, (245, 255, 255))
@@ -314,14 +330,34 @@ while True:
         status_poisoned= "Envenenado"
         txt_psnd = font.render(status_poisoned, True, (65, 255, 80))
         screen.blit(txt_psnd, (925, 575))
-    if life_amoz == 0:
+    if hero.vel_X<1.5:
+        status_slowed = "Lentidão"
+        txt_slwd = font.render(status_slowed, True, (0, 0, 30))
+        screen.blit(txt_slwd, (925, 560))
+    if life_amoz == 0 and life_dragon>0:
         game_over = "YOU LOSE!"
         txt_format_go = font_screen.render(game_over, True, (200, 30, 50))
-        screen.blit(txt_format_go, (230, 225))
-    if life_dragon == 0:
+        txt_format_score = font_score.render(txt_sc, True, (20, 20, 20))
+        txt_format_tabel= font_analyse.render(tabel, True, (145, 0, 0))
+        screen.blit(txt_format_score, (390, 325))
+        screen.blit(txt_format_go, (248, 222))
+        screen.blit(txt_format_tabel, (158, 375))
+    if life_dragon == 0 and life_amoz>0:
         game_won= "YOU WIN!"
         txt_format_gw = font_screen.render(game_won, True, (25, 55, 180))
-        screen.blit(txt_format_gw, (230, 225))
+        txt_format_score = font_score.render(txt_sc, True, (20, 20, 20))
+        txt_format_tabel= font_analyse.render(tabel, True, (0, 5, 133))
+        screen.blit(txt_format_gw, (248, 222))
+        screen.blit(txt_format_score, (390, 325))
+        screen.blit(txt_format_tabel, (158, 375))
+    if life_amoz == 0 and life_dragon== 0:
+        tie = "DRAW"
+        txt_format_dw = font_screen.render(tie, True, (159, 43, 104))
+        txt_format_score = font_score.render(txt_sc, True, (20, 20, 20))
+        txt_format_tabel = font_analyse.render(tabel, True, (128, 0, 32))
+        screen.blit(txt_format_score, (390, 325))
+        screen.blit(txt_format_dw, (360, 222))
+        screen.blit(txt_format_tabel, (158, 375))
 
     pg.display.flip()
     hero.update(all_sprites, time)
