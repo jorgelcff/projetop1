@@ -27,10 +27,10 @@ class Spell(pg.sprite.Sprite):
         self.posY = posY
         self.screenH = screenH
         self.screen = screen
-        self.vel_Y = 0.7
+        self.vel_Y = 0.5
         self.rect = self.image.get_rect()
         self.rect.topleft = 5, 5
-        self.colisions= [ ]
+        self.colisions= []
 
     def update(self, posY, screenH):
         if self.posY>= self.screenH:

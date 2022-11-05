@@ -87,13 +87,17 @@ def dragon_kit(item, name, number, impronunciable = impronunciable, height=heigh
             impronunciable.x = item.posX
         if hero.rect.colliderect(item.rect):
             item.checkcolision()
-            return name
+            non_colision = False
+            return non_colision
+        elif not hero.rect.colliderect(item.rect) and item.posY>=height:
+            item.checkcolision()
+            non_colision = True
+            return non_colision
     else:
         pass
 
-rage = 0 #Comparativo de vida
-asmodeus, poisoned, count_asmodeus = 0, 0, 0
-protection, half_life, reflection = False, False, False
+asmodeus, poisoned, count_asmodeus, rage = 0, 0, 0, 0
+protection, reflection = False, False
 
 while True:
     if life_dragon<0:
@@ -101,7 +105,7 @@ while True:
     if life_amoz<0:
         life_amoz=0
     if life_dragon<100:
-        rage = 10
+        rage = 12
     if life_dragon==0 or life_amoz==0:
         impronunciable.x= wight//2
     #Chamadas para comparação
@@ -112,10 +116,10 @@ while True:
     percentage(105, 90, spirit_guardian, " Spirit Guardian", probab= probab, life_amoz=life_amoz, life_dragon= life_dragon)
     percentage(110, 105, solar_blade, " Solar Blade", probab= probab, life_amoz=life_amoz, life_dragon= life_dragon)
 
-    dragon_kit(breathe_weakening, breathe_weakening.name, 1, probab_dragon = probab_dragon, life_amoz=life_amoz, life_dragon= life_dragon)
-    dragon_kit(flaming_blast, flaming_blast.name, 2, probab_dragon = probab_dragon, life_amoz=life_amoz, life_dragon= life_dragon)
-    dragon_kit(intimidating_curtain, intimidating_curtain.name, 3, probab_dragon = probab_dragon, life_amoz=life_amoz, life_dragon= life_dragon)
-    dragon_kit(turbulence, turbulence.name, 4, probab_dragon = probab_dragon, life_amoz=life_amoz, life_dragon= life_dragon)
+    breathe = dragon_kit(breathe_weakening, breathe_weakening.name, 1, probab_dragon = probab_dragon, life_amoz=life_amoz, life_dragon= life_dragon)
+    flaming = dragon_kit(flaming_blast, flaming_blast.name, 2, probab_dragon = probab_dragon, life_amoz=life_amoz, life_dragon= life_dragon)
+    intimidating = dragon_kit(intimidating_curtain, intimidating_curtain.name, 3, probab_dragon = probab_dragon, life_amoz=life_amoz, life_dragon= life_dragon)
+    thunder_blue = dragon_kit(turbulence, turbulence.name, 4, probab_dragon = probab_dragon, life_amoz=life_amoz, life_dragon= life_dragon)
     #Laço para quit
     for event in pg.event.get():
         if event.type == pg.QUIT:
@@ -129,7 +133,7 @@ while True:
     collision = pg.sprite.spritecollide(hero, hit, True)
 
     if life_dragon>0 and life_amoz>0:
-        if 0 < probab <= 20:
+        if 0 <= probab <= 20:
             if collision:
                 poisoned = 0
                 protection = True
@@ -192,6 +196,8 @@ while True:
                     count_asmodeus= 0
                     probab = randint(0, 110)
                     hit.remove(sound_devilish)
+                if hero.vel_X!= 1.5:
+                    hero.vel_X=1.5
             if not collision and sound_devilish.posY > height:
                 probab = randint(0, 110)
                 hit.remove(sound_devilish)
@@ -232,22 +238,23 @@ while True:
 
 
 
-        collision_negatives = pg.sprite.spritecollide(hero, hit_dmg, True)
+
         if probab_dragon==1:
-            if collision_negatives:
-                probab_dragon = randint(1, 4)
+            if breathe==False:
                 hit_dmg.remove(breathe_weakening)
+                probab_dragon = randint(1, 4)
                 if hero.vel_X>0.9:
                     hero.vel_X -= 0.6
-            if not collision_negatives and breathe_weakening.posY >= height:
-                probab_dragon = randint(1, 4)
+            elif breathe==True:
                 hit_dmg.remove(breathe_weakening)
+                probab_dragon = randint(1, 4)
+
 
         elif probab_dragon==2:
             dmg = randint(10, 20) + rage
-            if collision_negatives:
-                probab_dragon = randint(1, 4)
+            if flaming == False:
                 hit_dmg.remove(flaming_blast)
+                probab_dragon = randint(1, 4)
                 if protection:
                     life_amoz-= dmg//2+poisoned
                     protection = False
@@ -256,19 +263,17 @@ while True:
                 if reflection:
                     life_dragon -= dmg//3
                     reflection = False
-            if not collision_negatives and flaming_blast.posY >= height:
-                probab_dragon = randint(1, 4)
+            elif flaming==True:
                 hit_dmg.remove(flaming_blast)
-                if reflection:
-                    life_dragon -= dmg//3
-                    reflection = False
+                probab_dragon = randint(1, 4)
+
 
         elif probab_dragon==3:
             dmg = randint(1, 12) + rage
-            if collision_negatives:
-                poisoned+=1
-                probab_dragon = randint(1, 4)
+            if intimidating ==False:
                 hit_dmg.remove(intimidating_curtain)
+                poisoned+=3
+                probab_dragon = randint(1, 4)
                 if protection:
                     life_amoz -= dmg//2
                     protection = False
@@ -276,18 +281,16 @@ while True:
                     life_amoz-= dmg
                 if reflection:
                     life_dragon-= dmg//3
-            if not collision_negatives and intimidating_curtain.posY >= height:
-                probab_dragon = randint(1, 4)
+            elif intimidating==True:
                 hit_dmg.remove(intimidating_curtain)
-                if reflection:
-                    life_dragon -= dmg//3
-                    reflection = False
+                probab_dragon = randint(1, 4)
+
 
         elif probab_dragon==4:
             dmg = randint(5, 25)+rage
-            if collision_negatives:
-                probab_dragon = randint(1, 4)
+            if thunder_blue==False:
                 hit_dmg.remove(turbulence)
+                probab_dragon = randint(1, 4)
                 if protection:
                     life_amoz-= dmg//2+poisoned
                     protection = False
@@ -296,13 +299,9 @@ while True:
                 if reflection:
                     life_dragon -= dmg//3
                     reflection = False
-            if not collision_negatives and turbulence.posY >= height:
-                probab_dragon = randint(1, 4)
+            elif thunder_blue==True:
                 hit_dmg.remove(turbulence)
-                if reflection:
-                    life_dragon -= dmg // 3
-                    reflection = False
-
+                probab_dragon = randint(1, 4)
 
     hp_dragon = f'Vida do ?: {life_dragon}'
     hp_amoz = f'Vida de Amoz: {life_amoz}'
@@ -313,15 +312,15 @@ while True:
 
     if poisoned != 0:
         status_poisoned= "Envenenado"
-        txt_psnd = font.render(status_poisoned, True, (245, 255, 255))
+        txt_psnd = font.render(status_poisoned, True, (65, 255, 80))
         screen.blit(txt_psnd, (925, 575))
     if life_amoz == 0:
         game_over = "YOU LOSE!"
-        txt_format_go = font_screen.render(game_over, True, (245, 255, 255))
+        txt_format_go = font_screen.render(game_over, True, (200, 30, 50))
         screen.blit(txt_format_go, (230, 225))
     if life_dragon == 0:
         game_won= "YOU WIN!"
-        txt_format_gw = font_screen.render(game_won, True, (245, 255, 255))
+        txt_format_gw = font_screen.render(game_won, True, (25, 55, 180))
         screen.blit(txt_format_gw, (230, 225))
 
     pg.display.flip()
