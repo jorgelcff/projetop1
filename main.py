@@ -80,7 +80,7 @@ def percentage(number_l, number_r, item, name, height=height, y_pos=y_pos, proba
 def dragon_kit(item, name, number, impronunciable = impronunciable, height=height, y_pos=y_pos, wight =wight, probab_dragon = probab_dragon, hit_dmg = hit_dmg, life_amoz = life_amoz, life_dragon = life_dragon):
     if probab_dragon == number:
         hit_dmg.add(item)
-        if life_dragon>0 and life_amoz:
+        if life_dragon>0 and life_amoz>0:
             item.draw()
             item.update(y_pos, height)
         if item.posY<height:
@@ -91,7 +91,7 @@ def dragon_kit(item, name, number, impronunciable = impronunciable, height=heigh
     else:
         pass
 
-rage = 10 #Comparativo de vida
+rage = 0 #Comparativo de vida
 asmodeus, poisoned, count_asmodeus = 0, 0, 0
 protection, half_life, reflection = False, False, False
 
@@ -284,7 +284,7 @@ while True:
                     reflection = False
 
         elif probab_dragon==4:
-            dmg = randint(5, 25) + rage
+            dmg = randint(5, 25)+rage
             if collision_negatives:
                 probab_dragon = randint(1, 4)
                 hit_dmg.remove(turbulence)
@@ -317,12 +317,12 @@ while True:
         screen.blit(txt_psnd, (925, 575))
     if life_amoz == 0:
         game_over = "YOU LOSE!"
-        txt_format_go= font_screen.render(game_over, True, (245, 255, 255))
-        screen.blit(txt_format_go, (220, 225))
+        txt_format_go = font_screen.render(game_over, True, (245, 255, 255))
+        screen.blit(txt_format_go, (230, 225))
     if life_dragon == 0:
         game_won= "YOU WIN!"
         txt_format_gw = font_screen.render(game_won, True, (245, 255, 255))
-        screen.blit(txt_format_gw, (220, 225))
+        screen.blit(txt_format_gw, (230, 225))
 
     pg.display.flip()
     hero.update(all_sprites, time)
