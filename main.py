@@ -14,6 +14,17 @@ screen = pg.display.set_mode((wight, height))
 pg.display.set_caption('Dragão de Nome Impronunciável')
 background = pg.image.load("background.jpg")
 
+# Sonoro
+pygame.mixer.music.set_volume(1)
+msc_fundo = pygame.mixer.music.load('epic_bckgrnd_msc.mp3')
+pygame.mixer.music.play(-1)
+
+som_dragao_vida = pygame.mixer.Sound('dragon_roar.wav')
+som_amoz_vida = pygame.mixer.Sound('metallic_clank.wav')
+
+som_dos_vencedores = pygame.mixer.Sound('brasilsil.wav')
+som_dos_perdedores =pygame.mixer.Sound('losing_sound.wav')
+
 # Posições referências
 y_pos = 0
 
@@ -155,6 +166,7 @@ while True:
                 score+= 4
                 s_axe += 1
                 life_amoz -= poisoned
+                som_amoz_vida.play()
                 life_dragon -= randint(10, 15)+asmodeus
                 probab = randint(0, 110)
                 hit.remove(war_axe)
@@ -175,14 +187,18 @@ while True:
                 s_runes += 1
                 dex_dragon = randint(1, 2)
                 life_amoz -= poisoned
+                som_amoz_vida.play()
                 probab = randint(0, 110)
                 hit.remove(explosive_runes)
                 if dex_dragon==1:
                     life_dragon-= randint(25, 35)+asmodeus+5
+                    som_dragao_vida.play()
                 elif dex_dragon==2:
                     life_dragon-= randint(25, 35)+5//2
+                    som_dragao_vida.play()
                 if asmodeus>0 and 3>count_asmodeus>=0:
                     life_dragon-= 5
+                    som_dragao_vida.play()
                     count_asmodeus+= 1
                 elif count_asmodeus==3:
                     asmodeus= 0
@@ -199,6 +215,7 @@ while True:
                 score+= 8
                 s_sound += 1
                 life_amoz -= 10+poisoned
+                som_amoz_vida.play()
                 probab = randint(0, 110)
                 hit.remove(sound_devilish)
                 if asmodeus==0:
@@ -233,6 +250,7 @@ while True:
                 s_blade += 1
                 life_dragon-= randint(40, 50)
                 life_amoz -= poisoned
+                som_amoz_vida.play()
                 probab = randint(0, 110)
                 hit.remove(solar_blade)
                 if life_amoz<100:
@@ -274,8 +292,10 @@ while True:
                     protection = False
                 elif protection == False:
                     life_amoz -= dmg+poisoned
+                    som_amoz_vida.play()
                 if reflection:
                     life_dragon -= dmg//3
+                    som_dragao_vida.play()
                     reflection = False
             elif flaming==True:
                 hit_dmg.remove(flaming_blast)
@@ -290,11 +310,13 @@ while True:
                 probab_dragon = randint(1, 4)
                 if protection:
                     life_amoz -= dmg//2
+                    som_amoz_vida.play()
                     protection = False
                 elif protection==False:
                     life_amoz-= dmg
                 if reflection:
                     life_dragon-= dmg//3
+                    som_dragao_vida.play()
             elif intimidating==True:
                 hit_dmg.remove(intimidating_curtain)
                 probab_dragon = randint(1, 4)
@@ -310,8 +332,10 @@ while True:
                     protection = False
                 elif protection == False:
                     life_amoz -= dmg+poisoned
+                    som_amoz_vida.play()
                 if reflection:
                     life_dragon -= dmg//3
+                    som_dragao_vida.play()
                     reflection = False
             elif thunder_blue==True:
                 hit_dmg.remove(turbulence)
@@ -342,6 +366,7 @@ while True:
         screen.blit(txt_format_score, (390, 325))
         screen.blit(txt_format_go, (248, 222))
         screen.blit(txt_format_tabel, (158, 375))
+        som_dos_perdedores.play()
     if life_dragon == 0 and life_amoz>0:
         game_won= "YOU WIN!"
         txt_format_gw = font_screen.render(game_won, True, (25, 55, 180))
@@ -350,6 +375,7 @@ while True:
         screen.blit(txt_format_gw, (248, 222))
         screen.blit(txt_format_score, (390, 325))
         screen.blit(txt_format_tabel, (158, 375))
+        som_dos_vencedores.play()
     if life_amoz == 0 and life_dragon== 0:
         tie = "DRAW"
         txt_format_dw = font_screen.render(tie, True, (159, 43, 104))
@@ -358,6 +384,7 @@ while True:
         screen.blit(txt_format_score, (390, 325))
         screen.blit(txt_format_dw, (360, 222))
         screen.blit(txt_format_tabel, (158, 375))
+        som_dos_perdedores.play()
 
     pg.display.flip()
     hero.update(all_sprites, time)
