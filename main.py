@@ -14,7 +14,7 @@ screen = pg.display.set_mode((wight, height))
 pg.display.set_caption('Dragão de Nome Impronunciável')
 background = pg.image.load("background.jpg")
 
-# Sonoro
+#Sonoro
 pygame.mixer.music.set_volume(1)
 msc_fundo = pygame.mixer.music.load('epic_bckgrnd_msc.mp3')
 pygame.mixer.music.play(-1)
@@ -29,10 +29,12 @@ som_dos_perdedores =pygame.mixer.Sound('losing_sound.wav')
 y_pos = 0
 
 # Frames, objetos drops, protagonista e outros
-clock = pg.time.Clock()  # Usar para frame
+clock = pg.time.Clock()  # Usar para frame/s
+time = pg.time.get_ticks() # Usar para frame/s
 hero = Hero(90, 90, wight, height, screen)  # Criando a partir de classe
 hit = pg.sprite.Group() #Grupo para itens que vão colidir e trazer beneficios ao jogador
 hit_dmg = pg.sprite.Group() #Grupo para itens que vão colidir e trazer maleficios ao jogador
+all_sprites = pg.sprite.Group() #Grupo para atualização de sprite do personagem
 
 #Vidas
 life_dragon = 200
@@ -46,8 +48,7 @@ spirit_guardian = Spell(randint(20, 900), y_pos, wight, height, screen, 2, ' Spi
 sound_devilish = Spell(randint(20, 900), y_pos, wight, height, screen, 4, ' Sound Devilish')
 solar_blade = Spell(randint(20, 900), y_pos, wight, height, screen, 3, ' Solar Blade')
 
-#Objetos do dragão
-
+#Objetos do dragão, ataques
 turbulence = Damage(randint(20, 900), 225, wight, height, screen, 3, ' Turbulence', 640, 640, 0.9)
 flaming_blast = Damage(randint(20, 900), 225, wight, height, screen, 1, ' Flaming Blast', 400, 400, 0.7)
 breathe_weakening = Damage(randint(20, 900), 225, wight, height, screen, 0, ' Breathe Weakening', 500, 300, 0.9)
@@ -57,11 +58,9 @@ intimidating_curtain = Damage(randint(20, 900), 225, wight, height, screen, 2, '
 #Criando o dragão
 impronunciable = Lovecraft(250, 290, wight, height, screen, 400)
 
-#Probabilidades para os itens, textos da tela e outros
+#Probabilidades para os itens e textos da tela
 probab = randint(0, 110)
 probab_dragon = randint(1, 4)
-all_sprites = pg.sprite.Group()
-time = pg.time.get_ticks()
 font = pg.font.SysFont('Tempus San ITC', 15, True, False)
 font_screen = pg.font.SysFont('Tempus San ITC', 150, True, False)
 font_score = pg.font.SysFont('Tempus San ITC', 80, True, False)
@@ -107,12 +106,13 @@ def dragon_kit(item, name, number, impronunciable = impronunciable, height=heigh
             return non_colision
     else:
         pass
-
+#Variaveis usadas durante o While
 asmodeus, poisoned, count_asmodeus, rage, score = 0, 0, 0, 0, 0
 s_shield, s_axe, s_sound, s_runes, s_spirit, s_blade = 0, 0, 0, 0, 0, 0
-protection, reflection = False, False
+protection, reflection, loser, winner = False, False, False, False
 
 while True:
+    #Verificação de vidas para não haver número negativo e ativar mecanismos especificos (Rage e ajuste de posição)
     if life_dragon<0:
         life_dragon=0
     if life_amoz<0:
@@ -138,11 +138,14 @@ while True:
         if event.type == pg.QUIT:
             pg.quit()
             exit()
+    #Variável que coleta comandos do teclado
+    key = pg.key.get_pressed()
+
     #Desenho dos dois sprites principais
     hero.draw()
     impronunciable.draw()
 
-
+    #Colisão com itens beneficos e suas consequências individuais
     collision = pg.sprite.spritecollide(hero, hit, True)
 
     if life_dragon>0 and life_amoz>0:
@@ -270,7 +273,7 @@ while True:
 
 
 
-
+        #Colisões com itens negativos e suas consequências
         if probab_dragon==1:
             if breathe==False:
                 hit_dmg.remove(breathe_weakening)
@@ -340,52 +343,84 @@ while True:
             elif thunder_blue==True:
                 hit_dmg.remove(turbulence)
                 probab_dragon = randint(1, 4)
-
+    #Ajustes de textos desenhados na tela
     hp_dragon = f'Vida do ?: {life_dragon}'
     hp_amoz = f'Vida de Amoz: {life_amoz}'
     txt_sc = f'SCORE: {str(score)}'
     tabel = f'Shield Radiant: x{s_shield}, War Axe: x{s_axe}, Explosive Runes: x{s_runes}, Sound Devilish: x{s_sound}, Spirit Guardian: x{s_spirit} and Solar Blade: x{s_blade}'
+    try_again = "PRESS SPACE FOR START AGAIN"
 
     txt_format_drg = font.render(hp_dragon, True, (245, 255, 255))
     txt_format_amz = font.render(hp_amoz, True, (245, 255, 255))
 
-
+    #Mais ajustes de textos e seus updates na tela
     if poisoned != 0:
         status_poisoned= "Envenenado"
         txt_psnd = font.render(status_poisoned, True, (65, 255, 80))
         screen.blit(txt_psnd, (925, 575))
     if hero.vel_X<1.5:
         status_slowed = "Lentidão"
-        txt_slwd = font.render(status_slowed, True, (0, 0, 30))
+        txt_slwd = font.render(status_slowed, True, (96, 130, 182))
         screen.blit(txt_slwd, (925, 560))
     if life_amoz == 0 and life_dragon>0:
         game_over = "YOU LOSE!"
         txt_format_go = font_screen.render(game_over, True, (200, 30, 50))
         txt_format_score = font_score.render(txt_sc, True, (20, 20, 20))
         txt_format_tabel= font_analyse.render(tabel, True, (145, 0, 0))
+        txt_format_tg = font_analyse.render(try_again, True, (0, 0, 0))
         screen.blit(txt_format_score, (390, 325))
         screen.blit(txt_format_go, (248, 222))
         screen.blit(txt_format_tabel, (158, 375))
-        som_dos_perdedores.play()
+        screen.blit(txt_format_tg, (415, 450))
+        if loser==False:
+            som_dos_perdedores.play()
+            loser=True
+        if key[pg.K_SPACE]:
+            life_dragon = 200
+            life_amoz = 100
+            asmodeus, poisoned, count_asmodeus, rage, score = 0, 0, 0, 0, 0
+            s_shield, s_axe, s_sound, s_runes, s_spirit, s_blade = 0, 0, 0, 0, 0, 0
+            protection, reflection, loser, winner = False, False, False, False
     if life_dragon == 0 and life_amoz>0:
         game_won= "YOU WIN!"
         txt_format_gw = font_screen.render(game_won, True, (25, 55, 180))
         txt_format_score = font_score.render(txt_sc, True, (20, 20, 20))
         txt_format_tabel= font_analyse.render(tabel, True, (0, 5, 133))
+        txt_format_tg = font_analyse.render(try_again, True, (0, 0, 0))
         screen.blit(txt_format_gw, (248, 222))
         screen.blit(txt_format_score, (390, 325))
         screen.blit(txt_format_tabel, (158, 375))
-        som_dos_vencedores.play()
+        screen.blit(txt_format_tg, (415, 450))
+        if winner==False:
+            som_dos_vencedores.play()
+            winner=True
+        if key[pg.K_SPACE]:
+            life_dragon = 200
+            life_amoz = 100
+            asmodeus, poisoned, count_asmodeus, rage, score = 0, 0, 0, 0, 0
+            s_shield, s_axe, s_sound, s_runes, s_spirit, s_blade = 0, 0, 0, 0, 0, 0
+            protection, reflection, loser, winner = False, False, False, False
     if life_amoz == 0 and life_dragon== 0:
         tie = "DRAW"
         txt_format_dw = font_screen.render(tie, True, (159, 43, 104))
         txt_format_score = font_score.render(txt_sc, True, (20, 20, 20))
         txt_format_tabel = font_analyse.render(tabel, True, (128, 0, 32))
+        txt_format_tg = font_analyse.render(try_again, True, (0, 0, 0))
         screen.blit(txt_format_score, (390, 325))
         screen.blit(txt_format_dw, (360, 222))
         screen.blit(txt_format_tabel, (158, 375))
-        som_dos_perdedores.play()
-
+        screen.blit(txt_format_tg, (415, 450))
+        if winner==False:
+            som_dos_perdedores.play()
+            winner=True
+        if key[pg.K_SPACE]:
+            life_dragon = 200
+            life_amoz = 100
+            asmodeus, poisoned, count_asmodeus, rage, score = 0, 0, 0, 0, 0
+            s_shield, s_axe, s_sound, s_runes, s_spirit, s_blade = 0, 0, 0, 0, 0, 0
+            protection, reflection, loser, winner = False, False, False, False
+            
+    #Updates de texto, background, hero, tela e etc.
     pg.display.flip()
     hero.update(all_sprites, time)
     screen.blit(background, (0, 0))
