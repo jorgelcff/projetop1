@@ -9,4 +9,5 @@ Para executar o jogo, siga os passos abaixo:
 - Instale a blibioteca pygame.
 - Execute o arquivo main.py
 
-Atente-se às imagens do repositório, para o funcionamento do jogo, faz se necessário tal configuração. 
+## Instruções 
+![Imagem do WhatsApp de 2022-11-07 à(s) 11 35 59](https://user-images.githubusercontent.com/80436467/200395553-a750f47e-94fe-4b41-93c2-459e2a9462f7.jpg)
