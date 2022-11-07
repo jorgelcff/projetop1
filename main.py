@@ -169,7 +169,6 @@ while True:
                 score+= 4
                 s_axe += 1
                 life_amoz -= poisoned
-                som_amoz_vida.play()
                 life_dragon -= randint(10, 15)+asmodeus
                 probab = randint(0, 110)
                 hit.remove(war_axe)
@@ -190,7 +189,6 @@ while True:
                 s_runes += 1
                 dex_dragon = randint(1, 2)
                 life_amoz -= poisoned
-                som_amoz_vida.play()
                 probab = randint(0, 110)
                 hit.remove(explosive_runes)
                 if dex_dragon==1:
@@ -198,7 +196,6 @@ while True:
                     som_dragao_vida.play()
                 elif dex_dragon==2:
                     life_dragon-= randint(25, 35)+5//2
-                    som_dragao_vida.play()
                 if asmodeus>0 and 3>count_asmodeus>=0:
                     life_dragon-= 5
                     som_dragao_vida.play()
@@ -218,7 +215,6 @@ while True:
                 score+= 8
                 s_sound += 1
                 life_amoz -= 10+poisoned
-                som_amoz_vida.play()
                 probab = randint(0, 110)
                 hit.remove(sound_devilish)
                 if asmodeus==0:
@@ -253,7 +249,6 @@ while True:
                 s_blade += 1
                 life_dragon-= randint(40, 50)
                 life_amoz -= poisoned
-                som_amoz_vida.play()
                 probab = randint(0, 110)
                 hit.remove(solar_blade)
                 if life_amoz<100:
@@ -292,6 +287,7 @@ while True:
                 probab_dragon = randint(1, 4)
                 if protection:
                     life_amoz-= dmg//2+poisoned
+                    som_amoz_vida.play()
                     protection = False
                 elif protection == False:
                     life_amoz -= dmg+poisoned
@@ -317,9 +313,9 @@ while True:
                     protection = False
                 elif protection==False:
                     life_amoz-= dmg
+                    som_amoz_vida.play()
                 if reflection:
                     life_dragon-= dmg//3
-                    som_dragao_vida.play()
             elif intimidating==True:
                 hit_dmg.remove(intimidating_curtain)
                 probab_dragon = randint(1, 4)
@@ -332,13 +328,13 @@ while True:
                 probab_dragon = randint(1, 4)
                 if protection:
                     life_amoz-= dmg//2+poisoned
+                    som_amoz_vida.play()
                     protection = False
                 elif protection == False:
                     life_amoz -= dmg+poisoned
                     som_amoz_vida.play()
                 if reflection:
                     life_dragon -= dmg//3
-                    som_dragao_vida.play()
                     reflection = False
             elif thunder_blue==True:
                 hit_dmg.remove(turbulence)
