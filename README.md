@@ -9,4 +9,4 @@ Para executar o jogo, siga os passos abaixo:
 - Instale a blibioteca pygame.
 - Execute o arquivo main.py
 
-Atente-se as imagens do repositório, para o funcionamento do jogo, faz se necessário tal configuração. 
+Atente-se às imagens do repositório, para o funcionamento do jogo, faz se necessário tal configuração. 
